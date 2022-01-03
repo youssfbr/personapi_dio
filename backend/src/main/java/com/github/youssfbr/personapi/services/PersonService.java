@@ -1,32 +1,26 @@
 package com.github.youssfbr.personapi.services;
 
+import com.github.youssfbr.personapi.mapper.PersonMapper;
 import com.github.youssfbr.personapi.model.entities.Person;
 import com.github.youssfbr.personapi.repositories.IPersonRepository;
 import com.github.youssfbr.personapi.rest.dto.request.PersonDTO;
 import com.github.youssfbr.personapi.rest.dto.response.MessageResponseDTO;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Service
+@RequiredArgsConstructor
 public class PersonService {
 
-    private IPersonRepository personRepository;
+    private final IPersonRepository personRepository;
+    private static final PersonMapper personMapper = PersonMapper.INSTANCE;
 
-    @Autowired
-    public PersonService(IPersonRepository personRepository) {
-        this.personRepository = personRepository;
-    }
 
     public MessageResponseDTO createPerson(PersonDTO personDTO) {
-        Person personToSave = Person.builder()
-                .firstName(personDTO.getFirstName())
-                .lastName(personDTO.getLastName())
-                .cpf(personDTO.getCpf())
-                .birthDate(LocalDate.parse(personDTO.getBirthDate(), DateTimeFormatter.ofPattern("dd/MM/yyyy")))
-                .build();
+        Person personToSave = personMapper.toModel(personDTO);
 
         Person savedPerson = personRepository.save(personToSave);
         return MessageResponseDTO
