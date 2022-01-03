@@ -3,7 +3,9 @@ package com.github.youssfbr.personapi.rest.controllers;
 import com.github.youssfbr.personapi.model.entities.Person;
 import com.github.youssfbr.personapi.repositories.IPersonRepository;
 import com.github.youssfbr.personapi.rest.dto.response.MessageResponseDTO;
+import com.github.youssfbr.personapi.services.PersonService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PersonController {
 
-    private final IPersonRepository personRepository;
+    private final PersonService personService;
 
     @GetMapping
     public String getPerson() {
@@ -19,12 +21,8 @@ public class PersonController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public MessageResponseDTO createPerson(@RequestBody Person person) {
-
-        Person savedPerson = personRepository.save(person);
-        return MessageResponseDTO
-                .builder()
-                .message("Created person with ID " + savedPerson.getId())
-                .build();
+        return personService.createPerson(person);
     }
 }
