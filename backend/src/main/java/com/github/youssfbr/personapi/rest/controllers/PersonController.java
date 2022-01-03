@@ -5,9 +5,11 @@ import com.github.youssfbr.personapi.rest.dto.response.MessageResponseDTO;
 import com.github.youssfbr.personapi.services.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/peoples")
@@ -17,8 +19,8 @@ public class PersonController {
     private final PersonService personService;
 
     @GetMapping
-    public String getPerson() {
-        return "OK!";
+    public ResponseEntity<List<PersonDTO>> findAll() {
+        return ResponseEntity.ok(personService.findAll());
     }
 
     @PostMapping
