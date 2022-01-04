@@ -10,5 +10,6 @@ public interface IPersonService {
 
     List<PersonDTO> findAll();
     PersonDTO findById(final Long id) throws PersonNotFoundException;
-    MessageResponseDTO createPerson(PersonDTO personDTO);
+    MessageResponseDTO createPerson(final PersonDTO personDTO);
+    void delete(final Long id) throws PersonNotFoundException;
 }

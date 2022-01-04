@@ -6,10 +6,15 @@ import com.github.youssfbr.personapi.repositories.IPersonRepository;
 import com.github.youssfbr.personapi.rest.dto.request.PersonDTO;
 import com.github.youssfbr.personapi.rest.dto.response.MessageResponseDTO;
 
+import com.github.youssfbr.personapi.services.exceptions.DatabaseException;
+import com.github.youssfbr.personapi.services.exceptions.InternalServerError;
 import com.github.youssfbr.personapi.services.exceptions.PersonNotFoundException;
 import com.github.youssfbr.personapi.services.interfaces.IPersonService;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +50,7 @@ public class PersonService implements IPersonService {
 
     @Override
     @Transactional
-    public MessageResponseDTO createPerson(PersonDTO personDTO) {
+    public MessageResponseDTO createPerson(final PersonDTO personDTO) {
         Person personToSave = personMapper.toModel(personDTO);
 
         Person savedPerson = personRepository.save(personToSave);
@@ -53,5 +58,22 @@ public class PersonService implements IPersonService {
                 .builder()
                 .message("Created person with ID " + savedPerson.getId())
                 .build();
+    }
+
+    @Override
+    public void delete(final Long id) throws PersonNotFoundException {
+        try {
+            personRepository.deleteById(id);
+        }
+        catch (EmptyResultDataAccessException e) {
+            throw new PersonNotFoundException(id);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Resource not deleted. Integrity Violation",
+                    HttpStatus.BAD_REQUEST);
+        }
+        catch (Exception e) {
+            throw new InternalServerError("Internal error. Call the suport", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

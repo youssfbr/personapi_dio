@@ -34,4 +34,10 @@ public class PersonController {
     public MessageResponseDTO createPerson(@RequestBody @Valid PersonDTO personDTO) {
         return personService.createPerson(personDTO);
     }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) throws PersonNotFoundException {
+        personService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
 }
