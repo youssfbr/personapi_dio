@@ -6,6 +6,7 @@ import com.github.youssfbr.personapi.repositories.IPersonRepository;
 import com.github.youssfbr.personapi.rest.dto.request.PersonDTO;
 import com.github.youssfbr.personapi.rest.dto.response.MessageResponseDTO;
 
+import com.github.youssfbr.personapi.services.exceptions.PersonNotFoundException;
 import com.github.youssfbr.personapi.services.interfaces.IPersonService;
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +32,15 @@ public class PersonService implements IPersonService {
         return allPeople.stream()
                 .map(personMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PersonDTO findById(final Long id) throws PersonNotFoundException {
+        return personRepository
+                .findById(id)
+                .map(personMapper::toDTO)
+                .orElseThrow(() -> new PersonNotFoundException(id));
     }
 
     @Override

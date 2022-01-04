@@ -3,6 +3,7 @@ package com.github.youssfbr.personapi.rest.controllers;
 import com.github.youssfbr.personapi.rest.dto.request.PersonDTO;
 import com.github.youssfbr.personapi.rest.dto.response.MessageResponseDTO;
 import com.github.youssfbr.personapi.services.PersonService;
+import com.github.youssfbr.personapi.services.exceptions.PersonNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,11 @@ public class PersonController {
     @GetMapping
     public ResponseEntity<List<PersonDTO>> findAll() {
         return ResponseEntity.ok(personService.findAll());
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<PersonDTO> findById(@PathVariable Long id) throws PersonNotFoundException {
+        return ResponseEntity.ok(personService.findById(id));
     }
 
     @PostMapping
