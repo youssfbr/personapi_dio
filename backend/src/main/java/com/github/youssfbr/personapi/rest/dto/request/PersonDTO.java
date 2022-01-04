@@ -19,16 +19,16 @@ public class PersonDTO {
 
     private Long id;
 
-    @NotEmpty
-    @Size(min = 2, max = 20)
+    @NotEmpty(message = "{firstName.required}")
+    @Size(min = 2, max = 20, message = "{firstName.size}")
     private String firstName;
 
-    @NotEmpty
-    @Size(min = 2, max = 20)
+    @NotEmpty(message = "{lastName.required}")
+    @Size(min = 2, max = 20, message = "{lastName.size}")
     private String lastName;
 
-    @NotEmpty
-    @CPF
+    @NotEmpty(message = "{cpf.required}")
+    @CPF(message = "{cpf.invalid}")
     private String cpf;
 
     private String birthDate;

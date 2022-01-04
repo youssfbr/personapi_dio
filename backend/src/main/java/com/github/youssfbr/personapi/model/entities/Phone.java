@@ -23,6 +23,6 @@ public class Phone {
     @Column(nullable = false)
     private PhoneType type;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
     private String number;
 }

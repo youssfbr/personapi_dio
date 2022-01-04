@@ -6,12 +6,12 @@ import com.github.youssfbr.personapi.repositories.IPersonRepository;
 import com.github.youssfbr.personapi.rest.dto.request.PersonDTO;
 import com.github.youssfbr.personapi.rest.dto.response.MessageResponseDTO;
 
+import com.github.youssfbr.personapi.services.exceptions.CpfExistsException;
 import com.github.youssfbr.personapi.services.exceptions.DatabaseException;
 import com.github.youssfbr.personapi.services.exceptions.InternalServerError;
 import com.github.youssfbr.personapi.services.exceptions.PersonNotFoundException;
 import com.github.youssfbr.personapi.services.interfaces.IPersonService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -54,11 +54,13 @@ public class PersonService implements IPersonService {
     @Transactional
     public MessageResponseDTO createPerson(final PersonDTO personDTO) {
 
+        checkCPF(personDTO.getCpf());
+
         Person personToSave = personMapper.toModel(personDTO);
 
         Person savedPerson = personRepository.save(personToSave);
 
-        return createMessageResponse("Created person with ID ", savedPerson.getId());
+        return createMessageResponse("Pessoa criada com ID ", savedPerson.getId());
     }
 
     @Override
@@ -67,11 +69,13 @@ public class PersonService implements IPersonService {
 
         verifyIfExists(id);
 
+        checkCPF(personDTO.getCpf());
+
         Person personToUpdate = personMapper.toModel(personDTO);
 
         Person updatedPerson = personRepository.save(personToUpdate);
 
-        return createMessageResponse("Updated person with ID ", updatedPerson.getId());
+        return createMessageResponse("Pessoa atualizada com ID ", updatedPerson.getId());
     }
 
     @Override
@@ -83,11 +87,10 @@ public class PersonService implements IPersonService {
             throw new PersonNotFoundException(id);
         }
         catch (DataIntegrityViolationException e) {
-            throw new DatabaseException("Resource not deleted. Integrity Violation",
-                    HttpStatus.BAD_REQUEST);
+            throw new DatabaseException("Não foi possível excluir. Violação de integridade.", HttpStatus.BAD_REQUEST);
         }
         catch (Exception e) {
-            throw new InternalServerError("Internal error. Call the suport", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new InternalServerError("Erro interno. Por favor entrar em contato com o suporte.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -102,5 +105,10 @@ public class PersonService implements IPersonService {
                 .builder()
                 .message(message + id)
                 .build();
+    }
+
+    private void checkCPF(String cpf) {
+        var cpfExists = personRepository.findByCpf(cpf);
+        if (cpfExists.isPresent()) throw new CpfExistsException("Não foi possível cadastrar. CPF já existente.");
     }
 }
