@@ -51,13 +51,25 @@ public class PersonService implements IPersonService {
     @Override
     @Transactional
     public MessageResponseDTO createPerson(final PersonDTO personDTO) {
+
         Person personToSave = personMapper.toModel(personDTO);
 
         Person savedPerson = personRepository.save(personToSave);
-        return MessageResponseDTO
-                .builder()
-                .message("Created person with ID " + savedPerson.getId())
-                .build();
+
+        return createMessageResponse("Created person with ID ", savedPerson.getId());
+    }
+
+    @Override
+    @Transactional
+    public MessageResponseDTO updatePerson(final long id, final PersonDTO personDTO) throws PersonNotFoundException {
+
+        verifyIfExists(id);
+
+        Person personToUpdate = personMapper.toModel(personDTO);
+
+        Person updatedPerson = personRepository.save(personToUpdate);
+
+        return createMessageResponse("Updated person with ID ", updatedPerson.getId());
     }
 
     @Override
@@ -75,5 +87,18 @@ public class PersonService implements IPersonService {
         catch (Exception e) {
             throw new InternalServerError("Internal error. Call the suport", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private Person verifyIfExists(final Long id) throws PersonNotFoundException {
+        return personRepository
+                .findById(id)
+                .orElseThrow(() -> new PersonNotFoundException(id));
+    }
+
+    private MessageResponseDTO createMessageResponse(final String message, final Long id) {
+        return MessageResponseDTO
+                .builder()
+                .message(message + id)
+                .build();
     }
 }
