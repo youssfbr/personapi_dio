@@ -4,7 +4,10 @@ import com.github.youssfbr.personapi.rest.dto.request.PersonDTO;
 import com.github.youssfbr.personapi.rest.dto.response.MessageResponseDTO;
 import com.github.youssfbr.personapi.services.PersonService;
 import com.github.youssfbr.personapi.services.exceptions.PersonNotFoundException;
-import lombok.RequiredArgsConstructor;
+
+import lombok.AllArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/peoples")
-@RequiredArgsConstructor
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class PersonController {
 
     private final PersonService personService;

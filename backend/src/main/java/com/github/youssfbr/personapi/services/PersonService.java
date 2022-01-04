@@ -10,8 +10,10 @@ import com.github.youssfbr.personapi.services.exceptions.DatabaseException;
 import com.github.youssfbr.personapi.services.exceptions.InternalServerError;
 import com.github.youssfbr.personapi.services.exceptions.PersonNotFoundException;
 import com.github.youssfbr.personapi.services.interfaces.IPersonService;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -23,7 +25,7 @@ import java.util.stream.Collectors;
 
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class PersonService implements IPersonService {
 
     private final IPersonRepository personRepository;
