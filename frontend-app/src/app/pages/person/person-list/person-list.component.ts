@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -40,6 +40,34 @@ export class PersonListComponent implements OnInit {
       (persons: Person[]) => this.persons = persons,
       (err: any) => this.error(err, 'Ocorreu um erro ao carregar os dados dos clientes.')
     ).add(() => this.spinner.hide());
+  }
+
+  openModal(event: any, person: Person, template: TemplateRef<any>): void {
+    event.stopPropagation();
+
+    this.personSelect = person;
+
+    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+  }
+
+  delete(): void {
+
+    this.modalRef?.hide();
+
+    this.service.delete(this.personSelect).subscribe(
+      () => {
+        const index = this.persons.indexOf( this.personSelect );
+        this.persons.splice(index, 1);
+
+        this.toastr.toastrConfig.disableTimeOut = false;
+        this.toastr.success(this.name + ' deletada.');
+      },
+      (err: any) => this.error(err, 'Ocorreu um erro ao deletar a pessoa.'),
+    )
+  }
+
+  decline(): void {
+    this.modalRef?.hide();
   }
 
   private error(err?: any, msg?: string): void {

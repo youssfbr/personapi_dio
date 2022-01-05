@@ -35,13 +35,30 @@
             <td class="d-none d-md-table-cell">{{ person.cpf }}</td>
             <td class="d-none d-md-table-cell">{{ person.birthDate }}</td>
             <td>
-              <button class="btn btn-danger btn-sm" tooltip="Deletar">
+              <button class="btn btn-danger btn-sm" tooltip="Deletar" (click)="openModal($event, person, modalDelecao)">
                 <i class="fa fa-trash"></i>
               </button>
             </td>
           </tr>
         </tbody>
+        <tfoot *ngIf="!persons.length">
+          <tr>
+            <td colspan="7" class="text-center text-secondary">
+              <h6>Nenhuma {{ name }} </h6>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>
 </div>
+
+<ng-template #modalDelecao >
+  <div class="modal-body text-center">
+    <div class="modal-body" *ngIf="personSelect">
+      Confirma a exclusão da pessoa <strong>{{ personSelect.firstName }}</strong> ?
+    </div>
+    <button type="button" class="btn btn-default" (click)="delete()" >Sim</button>
+    <button type="button" class="btn btn-primary" (click)="decline()" >Não</button>
+  </div>
+</ng-template>
