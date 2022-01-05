@@ -30,7 +30,8 @@
               "src/styles.css"
             ],
             "scripts": [
-              "src/assets/js/scripts.js"
+              "src/assets/js/scripts.js",
+              "src/assets/js/datatables-simple-demo.js"
             ]
           },
           "configurations": {
