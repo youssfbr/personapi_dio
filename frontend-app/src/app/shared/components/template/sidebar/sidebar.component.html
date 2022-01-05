@@ -2,31 +2,48 @@
   <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
       <div class="sb-sidenav-menu">
           <div class="nav">
-              <div class="sb-sidenav-menu-heading">Core</div>
-              <a class="nav-link" href="index.html">
+              <div class="sb-sidenav-menu-heading">Sistema</div>
+              <a class="nav-link"
+              [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active" [routerLink]="['/home']">
                   <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                  Dashboard
+                  Home
               </a>
-              <div class="sb-sidenav-menu-heading">Interface</div>
-              <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+              <div class="sb-sidenav-menu-heading">Cadastros</div>
+              <a (click)="isCollapsed = !isCollapsed"
+                  class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                   <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                  Layouts
+                  Cadastros
                   <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
               </a>
-              <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+              <div [collapse]="isCollapsed" [isAnimated]="true"  id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                   <nav class="sb-sidenav-menu-nested nav">
+
+                    <a class="nav-link" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active" [routerLink]="['/person-list']" tooltip="Cadastro, listagem de pessoas">
+                      <i class="fas fa-user me-2"></i> Pessoas
+                    </a>
+
+                    <li><hr class="dropdown-divider" /></li>
+
+                    <a class="nav-link" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active" [routerLink]="['/about']" tooltip="Sobre mim...">
+                      <i class="fas fa-address-card me-2"></i>Sobre
+                    </a>
+
+                    <a class="nav-link" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active" [routerLink]="['/contact']" tooltip="Como entrar em contato comigo...">
+                      <i class="fas fa-id-badge me-2"></i> Contato
+                    </a>
+
                       <a class="nav-link" href="layout-static.html">Static Navigation</a>
                       <a class="nav-link" href="layout-sidenav-light.html">Light Sidenav</a>
                   </nav>
               </div>
-              <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+              <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                   <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
                   Pages
                   <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
               </a>
               <div class="collapse" id="collapsePages" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                   <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
-                      <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
+                      <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#pagesCollapseAuth" aria-expanded="false" aria-controls="pagesCollapseAuth">
                           Authentication
                           <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                       </a>
@@ -37,7 +54,7 @@
                               <a class="nav-link" href="password.html">Forgot Password</a>
                           </nav>
                       </div>
-                      <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
+                      <a class="nav-link collapsed" data-bs-toggle="collapse" data-bs-target="#pagesCollapseError" aria-expanded="false" aria-controls="pagesCollapseError">
                           Error
                           <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                       </a>
