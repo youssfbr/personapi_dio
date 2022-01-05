@@ -8,6 +8,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { SharedComponentsModule } from '@app/shared/components/shared-components.module';
 
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -31,7 +32,8 @@ import { PersonFormComponent } from './person-form/person-form.component';
     TooltipModule.forRoot(),
     CollapseModule.forRoot(),
     NgxSpinnerModule,
-    FormsModule
+    FormsModule,
+    SharedComponentsModule
   ],
   exports: [
     PersonListComponent,

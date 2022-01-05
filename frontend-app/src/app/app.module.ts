@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { TemplateModule } from './shared/components/template/template.module';
 import { PersonModule } from './pages/person/person.module';
+import { SharedComponentsModule } from './shared/components/shared-components.module';
 
 import { HomeComponent } from './pages/home/home.component';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
@@ -19,12 +20,14 @@ import { ContactComponent } from './pages/contact/contact.component';
     NotFoundComponent,
     AboutComponent,
     ContactComponent,
+
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     TemplateModule,
-    PersonModule
+    PersonModule,
+    SharedComponentsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
