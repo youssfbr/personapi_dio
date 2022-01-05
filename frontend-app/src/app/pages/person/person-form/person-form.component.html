@@ -20,18 +20,24 @@
     <div class="col-md-6">
       <label for="firstName" class="form-label">Nome *</label>
       <input type="text" class="form-control" id="firstName" formControlName="firstName" placeholder="Nome (requerido)"
+      [ngClass]="{ 'is-invalid': displayMessage.firstName }"
       />
+      <div class="invalid-feedback" >{{ displayMessage.firstName }}</div>
     </div>
     <div class="col-md-6">
       <label for="lastName" class="form-label">Sobrenome *</label>
       <input type="text" class="form-control" id="lastName" formControlName="lastName" placeholder="Sobrenome (requerido)"
+      [ngClass]="{ 'is-invalid': displayMessage.lastName }"
       />
+      <div class="invalid-feedback" >{{ displayMessage.lastName }}</div>
     </div>
 
     <div class="col-md-6">
       <label for="cpf" class="form-label">CPF *</label>
       <input type="text" class="form-control" id="cpf" formControlName="cpf" placeholder="CPF (requerido)"
+      [ngClass]="{ 'is-invalid': displayMessage.cpf }"
       />
+      <div class="invalid-feedback" >{{ displayMessage.cpf }}</div>
     </div>
     <div class="col-md-6">
       <label for="birthDate" class="form-label">Data de Aniversário *</label>

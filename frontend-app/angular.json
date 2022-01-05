@@ -27,11 +27,11 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
-              "src/assets/js/scripts.js",
-              "src/assets/js/datatables-simple-demo.js"
+              "src/assets/js/scripts.js"
             ]
           },
           "configurations": {

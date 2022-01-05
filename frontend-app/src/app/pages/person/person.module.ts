@@ -26,7 +26,12 @@ import { PersonFormComponent } from './person-form/person-form.component';
     CommonModule,
     PersonRoutingModule,
     ReactiveFormsModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-center',
+      preventDuplicates: true,
+      closeButton: true,
+      progressBar: true,
+    }),
     ModalModule.forRoot(),
     AlertModule.forRoot(),
     TooltipModule.forRoot(),

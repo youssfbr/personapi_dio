@@ -6,8 +6,8 @@ export interface Person {
   firstName: string;
   lastName: string;
   cpf: string;
-  birthDate: string;
+  birthDate: String;
   registerDate: string
   phones: Phone[];
-  
+
 }
