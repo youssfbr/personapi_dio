@@ -27,7 +27,7 @@
           </tr>
         </thead>
         <tbody *ngIf="persons && persons.length">
-          <tr *ngFor="let person of persons">
+          <tr *ngFor="let person of persons" (click)="edit(person.id)" style="cursor: pointer;">
             <td class="d-none d-md-table-cell">{{ person.id }}</td>
             <td>{{ person.firstName }}</td>
             <td>{{ person.lastName }}</td>

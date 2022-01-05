@@ -42,12 +42,8 @@ export class PersonListComponent implements OnInit {
     ).add(() => this.spinner.hide());
   }
 
-  openModal(event: any, person: Person, template: TemplateRef<any>): void {
-    event.stopPropagation();
-
-    this.personSelect = person;
-
-    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+  edit(id: number): void {
+    if (id) this.router.navigate([`/person-form/${id}`]);
   }
 
   delete(): void {
@@ -64,6 +60,14 @@ export class PersonListComponent implements OnInit {
       },
       (err: any) => this.error(err, 'Ocorreu um erro ao deletar a pessoa.'),
     )
+  }
+
+  openModal(event: any, person: Person, template: TemplateRef<any>): void {
+    event.stopPropagation();
+
+    this.personSelect = person;
+
+    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
   }
 
   decline(): void {

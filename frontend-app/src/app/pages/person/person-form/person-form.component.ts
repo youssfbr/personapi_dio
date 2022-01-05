@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit, ViewChildren, ElementRef } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormControlName } from '@angular/forms';
 
 import { fromEvent, merge, Observable } from 'rxjs';
@@ -59,9 +59,26 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
     note: [''],
   });
 
+  private loadPersons(): void {
+
+    this.personId = +this.activatedRoute.snapshot.paramMap.get('id')!;
+
+    if (this.personId && this.personId !== null && this.personId > 0) {
+
+     this.service.getPersonById(this.personId).subscribe(
+       (personRes: Person) => {
+         this.person = { ... personRes }
+         this.form.patchValue(this.person);
+       },
+       (err: any) => this.error(err, 'Ocorreu um erro ao carregar os dados!')
+     )
+    }
+  }
+
   constructor(
     private service: PersonService,
     private fb: FormBuilder,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService,
   ) {
@@ -69,6 +86,7 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.loadPersons();
   }
 
   ngAfterViewInit(): void {
@@ -87,8 +105,9 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
       form.value.cpf = form.value.cpf.replace(/\.|-/gm,'');
       this.person = Object.assign({}, this.person, this.form.value);
 
-      this.service.persist(this.person).subscribe({
-        next: (personResponse: Person) => {
+      this.service.persist(this.person).subscribe(
+
+        (personResponse: Person) => {
 
           this.toastr.clear();
 
@@ -99,8 +118,8 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
 
           this.router.navigate(['/person-list']);
         },
-        error: (err: any) => this.error(err, 'Ocorreu um erro ao salvar/atualizar!')
-      });
+        (err: any) => this.error(err, 'Ocorreu um erro ao salvar/atualizar!')
+      );
     }
   }
 
