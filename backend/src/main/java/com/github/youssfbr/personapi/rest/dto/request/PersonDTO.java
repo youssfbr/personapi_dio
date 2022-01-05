@@ -36,6 +36,8 @@ public class PersonDTO {
 
     private String registerDate;
 
+    private String note;
+
     @Valid
     @NotEmpty
     private List<PhoneDTO> phones;

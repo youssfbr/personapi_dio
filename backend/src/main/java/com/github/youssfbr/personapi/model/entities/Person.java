@@ -37,6 +37,9 @@ public class Person {
     @Column(nullable = false, updatable = false)
     private Instant registerDate;
 
+    @Column(columnDefinition = "TEXT")
+    private String note;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
     private List<Phone> phones;
 

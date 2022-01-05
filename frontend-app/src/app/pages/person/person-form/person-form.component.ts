@@ -24,6 +24,7 @@ export class PersonFormComponent implements OnInit {
     lastName: [''],
     cpf: [''],
     birthDate: [''],
+    note: [''],
   });
 
   constructor(
