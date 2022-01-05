@@ -4,3 +4,52 @@
 [subtitle]="'Cadastro'"
 >
 </app-title>
+
+<div class="container">
+  <form class="row g-3" [formGroup]="form" (ngSubmit)="onSubmit(form)">
+
+    <div class="col-md-6" *ngIf="person?.id" >
+      <label class="text-secondary form-label">Id</label>
+      <input type="text" class="form-control" formControlName="id" />
+    </div>
+    <div class="col-md-6" *ngIf="person?.id">
+        <label class="text-secondary form-label">Data Cadastro</label>
+        <input type="text" class="form-control" formControlName="registerDate" />
+    </div>
+
+    <div class="col-md-6">
+      <label for="firstName" class="form-label">Nome *</label>
+      <input type="text" class="form-control" id="firstName" formControlName="firstName" placeholder="Nome (requerido)"
+      />
+    </div>
+    <div class="col-md-6">
+      <label for="lastName" class="form-label">Sobrenome *</label>
+      <input type="text" class="form-control" id="lastName" formControlName="lastName" placeholder="Sobrenome (requerido)"
+      />
+    </div>
+
+    <div class="col-md-6">
+      <label for="cpf" class="form-label">CPF *</label>
+      <input type="text" class="form-control" id="cpf" formControlName="cpf" placeholder="CPF (requerido)"
+      />
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="birthDate" class="form-label">Data de Aniversário *</label>
+      <input type="text" class="form-control" id="birthDate" formControlName="birthDate" placeholder="dd/mm/yyyy"
+      />
+    </div>
+
+    <div>
+      <button class="btn btn-success mb-4 me-2" type="submit" *ngIf="!person?.id" tooltip="Salva a pessoa.">
+        <i class="fa fa-save me-2"></i>Salvar
+      </button>
+      <button class="btn btn-primary mb-4 me-2" type="submit" *ngIf="person?.id" tooltip="Edita a pessoa.">
+        <i class="fa fa-sync-alt me-2"></i>Atualizar
+      </button>
+      <button type="button" class="btn btn-danger mb-4" [routerLink]="['/person-list']" tooltip="Volta para listagem de pessoas.">
+        <i class="fa fa-arrow-alt-circle-left me-2"></i>Voltar
+      </button>
+    </div>
+  </form>
+
+</div>
