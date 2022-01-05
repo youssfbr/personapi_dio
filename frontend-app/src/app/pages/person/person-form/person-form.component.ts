@@ -36,7 +36,20 @@ export class PersonFormComponent implements OnInit {
   }
 
   onSubmit(form: FormGroup): void {
-    console.log(form.value);
+
+    form.value.cpf = form.value.cpf.replace(/\.|-/gm,'');
+    this.person = Object.assign({}, this.person, this.form.value);
+
+    this.service.persist(this.person).subscribe({
+      next: (person: Person) => {
+        console.log(person);
+      },
+      error: (err: any) => { console.log(err);
+      }
+    });
+
+
+    console.log(this.person);
   }
 
 }
