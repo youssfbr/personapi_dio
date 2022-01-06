@@ -15,14 +15,14 @@ import { PersonService } from '@app/shared/services/person.service';
 
 @Component({
   selector: 'app-person-form',
-  templateUrl: './person-form.component.html',
-  styleUrls: ['./person-form.component.css']
+  templateUrl: './person-form.component.html'
 })
 export class PersonFormComponent implements OnInit, AfterViewInit {
 
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements?: ElementRef[];
 
   name = 'Pessoa';
+  subtitle = 'Cadastro'
 
   person = {} as Person;
   personId: number = 0;
@@ -67,6 +67,7 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
     if (this.personId && this.personId !== null && this.personId > 0) {
 
       this.spinner.show();
+      this.subtitle = 'Atualizar';
 
       this.service.getPersonById(this.personId).subscribe(
 
