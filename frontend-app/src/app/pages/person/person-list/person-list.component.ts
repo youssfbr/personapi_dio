@@ -49,6 +49,7 @@ export class PersonListComponent implements OnInit {
   delete(): void {
 
     this.modalRef?.hide();
+    this.spinner.show();
 
     this.service.delete(this.personSelect).subscribe(
       () => {
@@ -59,7 +60,7 @@ export class PersonListComponent implements OnInit {
         this.toastr.success(this.name + ' deletada.');
       },
       (err: any) => this.error(err, 'Ocorreu um erro ao deletar a pessoa.'),
-    )
+    ).add(() => this.spinner.hide());
   }
 
   openModal(event: any, person: Person, template: TemplateRef<any>): void {

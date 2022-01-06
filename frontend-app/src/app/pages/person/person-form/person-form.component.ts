@@ -7,6 +7,7 @@ import { fromEvent, merge, Observable } from 'rxjs';
 import { DisplayMessage, GenericValidator, ValidationMessages } from '@app/shared/utils/generic-form-validation';
 
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 import { Person } from '@app/shared/models/person';
 
@@ -65,13 +66,16 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
 
     if (this.personId && this.personId !== null && this.personId > 0) {
 
-     this.service.getPersonById(this.personId).subscribe(
-       (personRes: Person) => {
-         this.person = { ... personRes }
-         this.form.patchValue(this.person);
-       },
-       (err: any) => this.error(err, 'Ocorreu um erro ao carregar os dados!')
-     )
+      this.spinner.show();
+
+      this.service.getPersonById(this.personId).subscribe(
+
+        (personRes: Person) => {
+          this.person = { ... personRes }
+          this.form.patchValue(this.person);
+        },
+        (err: any) => this.error(err, 'Ocorreu um erro ao carregar os dados!')
+      ).add(() => this.spinner.hide());
     }
   }
 
@@ -81,6 +85,7 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) {
     this.genericValidator = new GenericValidator(this.validationMessages);
   }
@@ -99,6 +104,8 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
   }
 
   onSubmit(form: FormGroup): void {
+
+    this.spinner.show();
 
     if (form.dirty && form.valid) {
 
@@ -119,7 +126,7 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
           this.router.navigate(['/person-list']);
         },
         (err: any) => this.error(err, 'Ocorreu um erro ao salvar/atualizar!')
-      );
+      ).add(() => this.spinner.hide());
     }
   }
 
