@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChildren, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup, FormBuilder, Validators, FormControlName } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControlName, FormArray, FormControl, AbstractControl } from '@angular/forms';
 
 import { fromEvent, merge, Observable } from 'rxjs';
 
@@ -12,6 +12,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Person } from '@app/shared/models/person';
 
 import { PersonService } from '@app/shared/services/person.service';
+import { Phone } from '@app/shared/models/phone';
 
 @Component({
   selector: 'app-person-form',
@@ -23,9 +24,17 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
 
   name = 'Pessoa';
   subtitle = 'Cadastro'
+  addTitlePhone = false;
 
   person = {} as Person;
   personId: number = 0;
+
+  addMsgPhone = false;
+  removeMsgPhone = false;
+
+  get phones(): FormArray {
+    return this.form.get('phones') as FormArray;
+  }
 
   private genericValidator: GenericValidator;
   displayMessage: DisplayMessage = {};
@@ -50,6 +59,10 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
     },
   };
 
+  public cssValidator(fieldForm: FormControl | AbstractControl | null): any {
+    return {'is-invalid': fieldForm?.errors && fieldForm?.touched};
+  }
+
   form: FormGroup = this.fb.group({
     id: [{ value: '', disabled: true }],
     registerDate: [{ value: '', disabled: true }],
@@ -58,7 +71,22 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
     cpf: ['', [Validators.required]], // TODO: NgBrazilValidators.cpf
     birthDate: [''], // TODO: CustomValidators.date
     note: [''],
+    phones: this.fb.array([])
   });
+
+  addPhone(): void {
+    this.addTitlePhone = true;
+    this.addMsgPhone = true;
+    this.phones.push(this.createPhone({} as Phone));
+  }
+
+  createPhone(phone: Phone): FormGroup{
+    return this.fb.group({
+      id: [phone.id, { value: '', disabled: true }],
+      type: [phone.type, Validators.required],
+      number: [phone.number, Validators.required]
+    });
+  }
 
   private loadPersons(): void {
 
@@ -74,6 +102,14 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
         (personRes: Person) => {
           this.person = { ... personRes }
           this.form.patchValue(this.person);
+
+          this.phones.reset();
+
+          this.person.phones.forEach(phone =>
+            this.phones.push(this.createPhone(phone))
+          );
+
+          this.phones.length ? this.addTitlePhone = true : this.addTitlePhone = false;
         },
         (err: any) => this.error(err, 'Ocorreu um erro ao carregar os dados!')
       ).add(() => this.spinner.hide());
@@ -118,9 +154,15 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
         (personResponse: Person) => {
 
           this.toastr.clear();
-
           this.toastr.toastrConfig.disableTimeOut = false;
-          this.toastr.success(this.name + ' salva/atualizada');
+          this.person.id
+            ? this.toastr.success(this.name + ' atualizada.')
+            : this.toastr.success(this.name + ' salva.');
+
+          if (this.addMsgPhone) this.toastr.success('Número de telefone adicionado.')
+
+          this.toastr.toastrConfig.disableTimeOut = true;
+          if (this.removeMsgPhone) this.toastr.success('Número de telefone removido.')
 
           this.person = Object.assign({}, this.person, personResponse);
 
@@ -129,6 +171,17 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
         (err: any) => this.error(err, 'Ocorreu um erro ao salvar/atualizar!')
       ).add(() => this.spinner.hide());
     }
+  }
+
+  RemovePhone(index: number): void {
+
+    this.phones.removeAt(index);
+
+    this.form.controls['phones'].markAsDirty();
+
+    this.phones.length ? this.addTitlePhone = true : this.addTitlePhone = false;
+
+    this.removeMsgPhone = true;
   }
 
   private error(err?: any, msg?: string): void {

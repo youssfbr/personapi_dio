@@ -41,28 +41,92 @@
     </div>
     <div class="col-md-6">
       <label for="birthDate" class="form-label">Data de Aniversário *</label>
-      <input type="text" class="form-control" id="birthDate" formControlName="birthDate" placeholder="dd/mm/yyyy"
+      <input type="text" class="form-control" id="birthDate" formControlName="birthDate" placeholder="dd/mm/aaaa"
       />
     </div>
 
-    <div class="mb-3" >
+    <div class="mb-2" >
       <label for="note" class="form-label">Observação</label>
-      <textarea class="form-control" formControlName="note" id="note" rows="3"></textarea>
+      <textarea class="form-control" formControlName="note" id="note" rows="2"></textarea>
     </div>
 
-    <div>
-      <button class="btn btn-success mb-4 me-2" type="submit" *ngIf="!person?.id" tooltip="Salva a pessoa.">
+    <div class="d-flex">
+      <button class="btn btn-success me-auto" type="submit" *ngIf="!person?.id"
+        [disabled]="!form.valid"
+        tooltip="Salva a pessoa.">
         <i class="fa fa-save me-2"></i>Salvar
       </button>
-      <button class="btn btn-primary mb-4 me-2" type="submit" *ngIf="person?.id" tooltip="Edita a pessoa.">
+      <button class="btn btn-outline-secondary border rounded me-auto" type="submit" *ngIf="person?.id"
+        [disabled]="!form.valid || (!form.dirty && form.untouched)"
+        tooltip="Edita o cliente.">
         <i class="fa fa-sync-alt me-2"></i>Atualizar
       </button>
-      <button type="button" class="btn btn-danger mb-4" [routerLink]="['/person-list']" tooltip="Volta para listagem de pessoas.">
+
+      <button type="button" class="btn btn-outline-secondary border" [routerLink]="['/person-list']" tooltip="Volta para listagem de pessoas.">
         <i class="fa fa-arrow-alt-circle-left me-2"></i>Voltar
       </button>
     </div>
+
   </form>
 
+  <div class="card rounded shadow-sm mt-4">
+    <div class="p-3">
+
+        <ol class="d-flex border-bottom  breadcrumb mt-0">
+          <li class="breadcrumb-item active me-auto ">Telefones</li>
+          <i class="fas fa-mobile-alt"></i>
+        </ol>
+
+      <p class="text-secondary">Clique no botão <strong>Telefone</strong>  para adicionar novos números de telefones.</p>
+      <pre class="text-secondary" *ngIf="addTitlePhone">  Selecione o tipo:      Número do telefone </pre>
+
+
+      <div class="form-row p-1">
+        <div [formGroup]="form" class="col">
+          <div formArrayName="phones" *ngFor="let phone of phones.controls; let i=index">
+            <fieldset [formGroupName]="i" class="form-group">
+
+              <div class="row g-3">
+
+                <div class="col-md-1" *ngIf="phone.get(i+'id')" >
+                  <label class="text-secondary form-label">Id</label>
+                  <input type="text" class="form-control" formControlName="id" /><!-- formControlName="id" -->
+                </div>
+
+                <div class="col-md-2 ">
+                  <select class="form-select" formControlName="type"
+                  [ngClass]="cssValidator(phones.get(i+'.type'))"
+                  >
+                    <option value="CELULAR">Celular</option>
+                    <option value="RESIDENCIAL">Residencial</option>
+                    <option value="COMERCIAL">Comercial</option>
+                  </select>
+                  <div class="invalid-feedback" >O tipo de telefone é requerido.</div>
+                </div>
+
+                <div class="col-md-2 mb-3">
+                  <input type="text" class="form-control" formControlName="number" placeholder="(85) 9.9999-9999" maxlength="21"
+                  [ngClass]="cssValidator(phones.get(i+'.number'))"
+                />
+                <div class="invalid-feedback" >O número é requerido.</div>
+                </div>
+
+                <div class="col-md-1 ">
+                  <button class="btn btn-danger btn-sm my-1 " tooltip="Deletar" (click)="RemovePhone(i)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </div>
+
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <button (click)="addPhone()" class="btn btn-outline-secondary border" [disabled]="!form.valid">
+          <i class="fa fa-plus-circle me-2"></i>Telefone
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <ngx-spinner
@@ -73,4 +137,3 @@
 >
   <p style="font-size: 20px; color: white;">Carregando ...</p>
 </ngx-spinner>
-
