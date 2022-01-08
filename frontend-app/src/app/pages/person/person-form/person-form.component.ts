@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChildren, ElementRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChildren, ElementRef, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormControlName, FormArray, FormControl, AbstractControl } from '@angular/forms';
 
@@ -6,6 +6,7 @@ import { fromEvent, merge, Observable } from 'rxjs';
 
 import { DisplayMessage, GenericValidator, ValidationMessages } from '@app/shared/utils/generic-form-validation';
 
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
@@ -22,6 +23,8 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
 
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements?: ElementRef[];
 
+  modalRef?: BsModalRef;
+
   name = 'Pessoa';
   subtitle = 'Cadastro'
   addTitlePhone = false;
@@ -29,6 +32,9 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
   person = {} as Person;
   personId: number = 0;
 
+  indexPhone: number = 0;
+  idPhone: number = 0;
+  numberPhone: string = '';
   addMsgPhone = false;
   removeMsgPhone = false;
 
@@ -77,6 +83,7 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
   addPhone(): void {
     this.addTitlePhone = true;
     this.addMsgPhone = true;
+    this.removeMsgPhone = false;
     this.phones.push(this.createPhone({} as Phone));
   }
 
@@ -120,6 +127,7 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
     private service: PersonService,
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
+    private modalService: BsModalService,
     private router: Router,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService
@@ -140,7 +148,7 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onSubmit(form: FormGroup): void {
+  onSubmit(form: FormGroup, navigate = true): void {
 
     this.spinner.show();
 
@@ -155,25 +163,42 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
 
           this.toastr.clear();
           this.toastr.toastrConfig.disableTimeOut = false;
-          this.person.id
-            ? this.toastr.success(this.name + ' atualizada.')
-            : this.toastr.success(this.name + ' salva.');
-
           if (this.addMsgPhone) this.toastr.success('Número de telefone adicionado.')
+          this.person.id
+          ? this.toastr.success(this.name + ' atualizada.')
+          : this.toastr.success(this.name + ' salva.');
+
 
           this.toastr.toastrConfig.disableTimeOut = true;
-          if (this.removeMsgPhone) this.toastr.success('Número de telefone removido.')
+          if (this.removeMsgPhone) this.toastr.success(`Número de telefone ${this.numberPhone} removido.`);
 
           this.person = Object.assign({}, this.person, personResponse);
 
-          this.router.navigate(['/person-list']);
+          if (navigate) this.router.navigate(['/person-list']);
         },
         (err: any) => this.error(err, 'Ocorreu um erro ao salvar/atualizar!')
       ).add(() => this.spinner.hide());
     }
   }
 
-  RemovePhone(index: number): void {
+  RemovePhone(template: TemplateRef<any>, index: number): void {
+
+    this.indexPhone = index;
+    this.idPhone = this.phones.get(index+'.id')?.value;
+    this.numberPhone = this.phones.get(index+'.number')?.value;
+
+    if (this.idPhone) {
+      this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
+    }
+    else {
+      this.phones.removeAt(index);
+    }
+  }
+
+  confirmDeleteTelefone(index: number): void {
+
+    this.modalRef?.hide();
+    this.spinner.show();
 
     this.phones.removeAt(index);
 
@@ -181,7 +206,16 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
 
     this.phones.length ? this.addTitlePhone = true : this.addTitlePhone = false;
 
+    this.addMsgPhone = false;
     this.removeMsgPhone = true;
+
+    this.onSubmit(this.form, false);
+
+    this.spinner.hide();
+  }
+
+  decline(): void {
+    this.modalRef?.hide();
   }
 
   private error(err?: any, msg?: string): void {

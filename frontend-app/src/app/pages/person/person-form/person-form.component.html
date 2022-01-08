@@ -90,7 +90,7 @@
 
                 <div class="col-md-1" *ngIf="phone.get(i+'id')" >
                   <label class="text-secondary form-label">Id</label>
-                  <input type="text" class="form-control" formControlName="id" /><!-- formControlName="id" -->
+                  <input type="text" class="form-control" formControlName="id" />
                 </div>
 
                 <div class="col-md-2 ">
@@ -112,7 +112,7 @@
                 </div>
 
                 <div class="col-md-1 ">
-                  <button class="btn btn-danger btn-sm my-1 " tooltip="Deletar" (click)="RemovePhone(i)">
+                  <button class="btn btn-danger btn-sm my-1 " tooltip="Deletar" (click)="RemovePhone(modalDelecao, i)">
                     <i class="fa fa-trash"></i>
                   </button>
                 </div>
@@ -128,6 +128,16 @@
     </div>
   </div>
 </div>
+
+<ng-template #modalDelecao >
+  <div class="modal-body text-center">
+    <div class="modal-body">
+      Confirma a exclusão do número de telefone <strong>{{ numberPhone }}</strong> ?
+    </div>
+    <button type="button" class="btn btn-default" (click)="confirmDeleteTelefone(indexPhone)" >Sim</button>
+    <button type="button" class="btn btn-primary" (click)="decline()" >Não</button>
+  </div>
+</ng-template>
 
 <ngx-spinner
   bdColor="rgba(51,51,51,0.8)"
