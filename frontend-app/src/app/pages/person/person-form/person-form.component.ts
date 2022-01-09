@@ -11,9 +11,10 @@ import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 import { Person } from '@app/shared/models/person';
+import { Phone } from '@app/shared/models/phone';
 
 import { PersonService } from '@app/shared/services/person.service';
-import { Phone } from '@app/shared/models/phone';
+
 
 @Component({
   selector: 'app-person-form',
@@ -66,7 +67,7 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
   };
 
   public cssValidator(fieldForm: FormControl | AbstractControl | null): any {
-    return {'is-invalid': fieldForm?.errors && fieldForm?.touched};
+    return {'is-invalid': fieldForm?.errors && (fieldForm?.dirty || fieldForm?.touched)};
   }
 
   form: FormGroup = this.fb.group({
@@ -91,7 +92,7 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
     return this.fb.group({
       id: [phone.id, { value: '', disabled: true }],
       type: [phone.type, Validators.required],
-      number: [phone.number, Validators.required]
+      number: [phone.number, [Validators.required, Validators.maxLength(20)]]
     });
   }
 
@@ -115,8 +116,7 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
           this.person.phones.forEach(phone =>
             this.phones.push(this.createPhone(phone))
           );
-
-          this.phones.length ? this.addTitlePhone = true : this.addTitlePhone = false;
+         // this.phones.length ? this.addTitlePhone = true : this.addTitlePhone = false;
         },
         (err: any) => this.error(err, 'Ocorreu um erro ao carregar os dados!')
       ).add(() => this.spinner.hide());
@@ -168,7 +168,6 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
           ? this.toastr.success(this.name + ' atualizada.')
           : this.toastr.success(this.name + ' salva.');
 
-
           this.toastr.toastrConfig.disableTimeOut = true;
           if (this.removeMsgPhone) this.toastr.success(`Número de telefone ${this.numberPhone} removido.`);
 
@@ -187,6 +186,8 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
     this.idPhone = this.phones.get(index+'.id')?.value;
     this.numberPhone = this.phones.get(index+'.number')?.value;
 
+    this.addTitlePhone = false;
+
     if (this.idPhone) {
       this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
     }
@@ -204,7 +205,7 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
 
     this.form.controls['phones'].markAsDirty();
 
-    this.phones.length ? this.addTitlePhone = true : this.addTitlePhone = false;
+   // this.phones.length ? this.addTitlePhone = true : this.addTitlePhone = false;
 
     this.addMsgPhone = false;
     this.removeMsgPhone = true;

@@ -14,8 +14,9 @@
     </div>
     <div class="col-md-6" *ngIf="person?.id">
         <label class="text-secondary form-label">Data Cadastro</label>
-        <input type="text" class="form-control" formControlName="registerDate" />
+        <input type="text" class="form-control" value="{{ form.controls['registerDate'].value | InstantFormat }}" disabled  />
     </div>
+
 
     <div class="col-md-6">
       <label for="firstName" class="form-label">Nome *</label>
@@ -108,8 +109,11 @@
                   <input type="text" class="form-control" formControlName="number" placeholder="(85) 9.9999-9999" maxlength="21"
                   [ngClass]="cssValidator(phones.get(i+'.number'))"
                 />
-                <div class="invalid-feedback" >O número é requerido.</div>
+                <div class="invalid-feedback" *ngIf="phones.get(i+'.number')?.errors?.required && (phones.get(i+'.number')?.dirty || phones.get(i+'.number')?.touched)">O número é requerido.</div>
+                <div class="invalid-feedback" *ngIf="phones.get(i+'.number')?.errors?.maxlength && (phones.get(i+'.number')?.dirty || phones.get(i+'.number')?.touched)">Máximo de 20 caracteres.</div>
                 </div>
+
+
 
                 <div class="col-md-1 ">
                   <button class="btn btn-danger btn-sm my-1 " tooltip="Deletar" (click)="RemovePhone(modalDelecao, i)">
@@ -118,6 +122,8 @@
                 </div>
 
               </div>
+
+
             </fieldset>
           </div>
         </div>

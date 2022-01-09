@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { PersonRoutingModule } from './person-routing.module';
 
@@ -15,12 +15,14 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { PersonListComponent } from './person-list/person-list.component';
 import { PersonFormComponent } from './person-form/person-form.component';
+import { InstantFormatPipe } from '@app/shared/helpers/InstantFormat.pipe';
 
 
 @NgModule({
   declarations: [
     PersonListComponent,
-    PersonFormComponent
+    PersonFormComponent,
+    InstantFormatPipe
   ],
   imports: [
     CommonModule,
@@ -37,7 +39,6 @@ import { PersonFormComponent } from './person-form/person-form.component';
     TooltipModule.forRoot(),
     CollapseModule.forRoot(),
     NgxSpinnerModule,
-    FormsModule,
     SharedComponentsModule
   ],
   exports: [
