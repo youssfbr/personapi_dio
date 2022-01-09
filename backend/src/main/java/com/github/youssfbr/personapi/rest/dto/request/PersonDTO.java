@@ -38,7 +38,7 @@ public class PersonDTO {
 
     private String note;
 
-    @Valid
-    @NotEmpty
+    //@Valid
+  //  @NotEmpty
     private List<PhoneDTO> phones;
 }

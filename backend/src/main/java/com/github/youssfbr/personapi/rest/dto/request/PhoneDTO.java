@@ -20,11 +20,11 @@ public class PhoneDTO {
 
     private Long id;
 
-    @NotNull(message = "{phoneNumber.required}")
+  //  @NotNull(message = "{phoneNumber.required}")
     @Enumerated(EnumType.STRING)
     private PhoneType type;
 
-    @NotEmpty(message = "{phoneNumber.required}")
+  //  @NotEmpty(message = "{phoneNumber.required}")
     @Size(min = 8, max = 20, message = "{phoneNumber.size}")
     private String number;
 }

@@ -5,12 +5,12 @@ import com.github.youssfbr.personapi.model.entities.Person;
 import com.github.youssfbr.personapi.repositories.IPersonRepository;
 import com.github.youssfbr.personapi.rest.dto.request.PersonDTO;
 import com.github.youssfbr.personapi.rest.dto.response.MessageResponseDTO;
-
 import com.github.youssfbr.personapi.services.exceptions.CpfExistsException;
 import com.github.youssfbr.personapi.services.exceptions.DatabaseException;
 import com.github.youssfbr.personapi.services.exceptions.InternalServerError;
 import com.github.youssfbr.personapi.services.exceptions.PersonNotFoundException;
 import com.github.youssfbr.personapi.services.interfaces.IPersonService;
+
 import lombok.AllArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,9 @@ public class PersonService implements IPersonService {
     @Transactional
     public MessageResponseDTO createPerson(final PersonDTO personDTO) {
 
-        checkCPF(personDTO.getCpf());
+        checkDateEmpty(personDTO);
+
+        checkCPF(personDTO);
 
         Person personToSave = personMapper.toModel(personDTO);
 
@@ -69,7 +71,7 @@ public class PersonService implements IPersonService {
 
         verifyIfExists(id);
 
-        checkCPF(personDTO.getCpf());
+     //   checkCPF(personDTO);
 
         Person personToUpdate = personMapper.toModel(personDTO);
 
@@ -107,8 +109,22 @@ public class PersonService implements IPersonService {
                 .build();
     }
 
-    private void checkCPF(String cpf) {
-        var cpfExists = personRepository.findByCpf(cpf);
-        if (cpfExists.isPresent()) throw new CpfExistsException("Não foi possível cadastrar. CPF já existente.");
+    private void checkCPF(PersonDTO personDTO) {
+        //if (personDTO.getId() > 0) {
+            System.out.println(personDTO.getId());
+            System.out.println(personDTO.getId());
+            System.out.println(personDTO.getId());
+            System.out.println(personDTO.getId());
+            System.out.println(personDTO.getId());
+
+            var cpfExists = personRepository.findByCpf(personDTO.getCpf());
+            if (cpfExists.isPresent()) throw new CpfExistsException("Não foi possível cadastrar. CPF já existente.");
+       // }
+    }
+
+    private void checkDateEmpty(PersonDTO personDTO) {
+        if (personDTO.getBirthDate().isBlank() || personDTO.getBirthDate().isEmpty()) {
+            personDTO.setBirthDate(null);
+        }
     }
 }
