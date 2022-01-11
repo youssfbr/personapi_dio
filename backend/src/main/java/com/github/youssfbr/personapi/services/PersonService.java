@@ -54,8 +54,6 @@ public class PersonService implements IPersonService {
     @Transactional
     public MessageResponseDTO createPerson(final PersonDTO personDTO) {
 
-        checkDateEmpty(personDTO);
-
         checkCPF(personDTO);
 
         Person personToSave = personMapper.toModel(personDTO);
@@ -70,8 +68,6 @@ public class PersonService implements IPersonService {
     public MessageResponseDTO updatePerson(final long id, final PersonDTO personDTO) throws PersonNotFoundException {
 
         verifyIfExists(id);
-
-     //   checkCPF(personDTO);
 
         Person personToUpdate = personMapper.toModel(personDTO);
 
@@ -110,21 +106,9 @@ public class PersonService implements IPersonService {
     }
 
     private void checkCPF(PersonDTO personDTO) {
-        //if (personDTO.getId() > 0) {
-            System.out.println(personDTO.getId());
-            System.out.println(personDTO.getId());
-            System.out.println(personDTO.getId());
-            System.out.println(personDTO.getId());
-            System.out.println(personDTO.getId());
 
             var cpfExists = personRepository.findByCpf(personDTO.getCpf());
             if (cpfExists.isPresent()) throw new CpfExistsException("Não foi possível cadastrar. CPF já existente.");
-       // }
     }
 
-    private void checkDateEmpty(PersonDTO personDTO) {
-        if (personDTO.getBirthDate().isBlank() || personDTO.getBirthDate().isEmpty()) {
-            personDTO.setBirthDate(null);
-        }
-    }
 }
