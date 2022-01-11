@@ -15,7 +15,6 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { TextMaskModule } from '@myndmanagement/text-mask';
 import { NgBrazil } from 'ng-brazil';
-import { CustomFormsModule } from 'ng2-validation'
 
 import { PersonListComponent } from './person-list/person-list.component';
 import { PersonFormComponent } from './person-form/person-form.component';
@@ -35,7 +34,6 @@ import { InstantFormatPipe } from '@app/shared/helpers/InstantFormat.pipe';
     ReactiveFormsModule,
     TextMaskModule,
     NgBrazil,
-    CustomFormsModule,
     ToastrModule.forRoot({
       positionClass: 'toast-top-center',
       preventDuplicates: true,
