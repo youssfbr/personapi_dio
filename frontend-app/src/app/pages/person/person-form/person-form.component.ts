@@ -1,8 +1,10 @@
 import { Component, OnInit, AfterViewInit, ViewChildren, ElementRef, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormGroup, FormBuilder, Validators, FormControlName, FormArray, FormControl, AbstractControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControlName, FormArray, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 
 import { fromEvent, merge, Observable } from 'rxjs';
+
+import { MASKS, NgBrazilValidators } from 'ng-brazil';
 
 import { DisplayMessage, GenericValidator, ValidationMessages } from '@app/shared/utils/generic-form-validation';
 
@@ -14,7 +16,7 @@ import { Person } from '@app/shared/models/person';
 import { Phone } from '@app/shared/models/phone';
 
 import { PersonService } from '@app/shared/services/person.service';
-
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-person-form',
@@ -25,6 +27,10 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
   @ViewChildren(FormControlName, { read: ElementRef }) formInputElements?: ElementRef[];
 
   modalRef?: BsModalRef;
+
+  MASKS = MASKS;
+  dateMask = [/[0-9]/, /[0-9]/, '/',/[0-9]/, /[0-9]/,'/', /\d/, /\d/, /\d/, /\d/];
+  phoneMask = ['(', /[1-9]/, /\d/, ')', ' ', /\d/ , /\d/ , /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
 
   name = 'Pessoa';
   subtitle = 'Cadastro'
@@ -38,6 +44,8 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
   numberPhone: string = '';
   addMsgPhone = false;
   removeMsgPhone = false;
+
+  
 
   get phones(): FormArray {
     return this.form.get('phones') as FormArray;
@@ -62,8 +70,8 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
       cpf: 'CPF inválido.'
     },
     birthDate: {
-      date: 'Data inválida.'
-    },
+      invalidDate: 'Data de aniversário inválida'
+    }
   };
 
   public cssValidator(fieldForm: FormControl | AbstractControl | null): any {
@@ -75,8 +83,8 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
     registerDate: [{ value: '', disabled: true }],
     firstName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
     lastName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
-    cpf: ['', [Validators.required]], // TODO: NgBrazilValidators.cpf
-    birthDate: [''], // TODO: CustomValidators.date
+    cpf: ['', [Validators.required, <any>NgBrazilValidators.cpf]],
+    birthDate: [null, [ this.isValidDate]],
     note: [''],
     phones: this.fb.array([])
   });
@@ -92,7 +100,7 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
     return this.fb.group({
       id: [phone.id, { value: '', disabled: true }],
       type: [phone.type, Validators.required],
-      number: [phone.number, [Validators.required, Validators.maxLength(20)]]
+      number: [phone.number, Validators.required]
     });
   }
 
@@ -116,7 +124,6 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
           this.person.phones.forEach(phone =>
             this.phones.push(this.createPhone(phone))
           );
-         // this.phones.length ? this.addTitlePhone = true : this.addTitlePhone = false;
         },
         (err: any) => this.error(err, 'Ocorreu um erro ao carregar os dados!')
       ).add(() => this.spinner.hide());
@@ -136,6 +143,7 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.form.addControl('birthDate', new FormControl('', null));
     this.loadPersons();
   }
 
@@ -155,6 +163,11 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
     if (form.dirty && form.valid) {
 
       form.value.cpf = form.value.cpf.replace(/\.|-/gm,'');
+
+      if (form.controls['birthDate'].value === "") {
+        form.patchValue({ birthDate : null});
+      }
+
       this.person = Object.assign({}, this.person, this.form.value);
 
       this.service.persist(this.person).subscribe(
@@ -205,8 +218,6 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
 
     this.form.controls['phones'].markAsDirty();
 
-   // this.phones.length ? this.addTitlePhone = true : this.addTitlePhone = false;
-
     this.addMsgPhone = false;
     this.removeMsgPhone = true;
 
@@ -233,4 +244,22 @@ export class PersonFormComponent implements OnInit, AfterViewInit {
         : this.toastr.error(msg, 'Erro!');
   }
 
+  private isValidDate(c: FormControl): ValidationErrors {
+
+    let result!: ValidationErrors;
+
+    let isValid = true;
+
+    if (c.value) {
+       isValid = moment(c.value, 'DD/MM/YYYY').isValid();
+    }
+
+    if (!isValid) {
+      if (isValid !== null) {
+        result = { invalidDate: 'Invalid date' };
+     }
+    }
+
+    return result;
+  }
 }

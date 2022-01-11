@@ -35,15 +35,17 @@
 
     <div class="col-md-6">
       <label for="cpf" class="form-label">CPF *</label>
-      <input type="text" class="form-control" id="cpf" formControlName="cpf" placeholder="CPF (requerido)"
+      <input type="text" class="form-control" id="cpf" formControlName="cpf" cpf [textMask]="{mask: MASKS.cpf.textMask}" placeholder="CPF (requerido)"
       [ngClass]="{ 'is-invalid': displayMessage.cpf }"
       />
       <div class="invalid-feedback" >{{ displayMessage.cpf }}</div>
     </div>
     <div class="col-md-6">
-      <label for="birthDate" class="form-label">Data de Aniversário *</label>
-      <input type="text" class="form-control" id="birthDate" formControlName="birthDate" placeholder="dd/mm/aaaa"
+      <label for="birthDate" class="form-label">Data de Aniversário </label>
+      <input type="text" class="form-control" id="birthDate" formControlName="birthDate" placeholder="31/12/2000" [textMask]="{mask: dateMask}" 
+      [ngClass]="{ 'is-invalid': displayMessage.birthDate }"
       />
+      <div class="invalid-feedback" >{{ displayMessage.birthDate }}</div>
     </div>
 
     <div class="mb-2" >
@@ -54,12 +56,12 @@
     <div class="d-flex">
       <button class="btn btn-success me-auto" type="submit" *ngIf="!person?.id"
         [disabled]="!form.valid"
-        tooltip="Salva a pessoa.">
+        tooltip="Salva uma pessoa e/ou seus telefones.">
         <i class="fa fa-save me-2"></i>Salvar
       </button>
-      <button class="btn btn-outline-secondary border rounded me-auto" type="submit" *ngIf="person?.id"
+      <button class="btn btn-primary border rounded me-auto" type="submit" *ngIf="person?.id"
         [disabled]="!form.valid || (!form.dirty && form.untouched)"
-        tooltip="Edita o cliente.">
+        tooltip="Edita o cliente e/ou seus telefones.">
         <i class="fa fa-sync-alt me-2"></i>Atualizar
       </button>
 
@@ -79,7 +81,7 @@
         </ol>
 
       <p class="text-secondary">Clique no botão <strong>Telefone</strong>  para adicionar novos números de telefones.</p>
-      <pre class="text-secondary" *ngIf="addTitlePhone">  Selecione o tipo:      Número do telefone </pre>
+      <pre class="text-secondary" *ngIf="addTitlePhone">    Selecione o tipo:         Número do telefone: </pre>
 
 
       <div class="form-row p-1">
@@ -94,7 +96,7 @@
                   <input type="text" class="form-control" formControlName="id" />
                 </div>
 
-                <div class="col-md-2 ">
+                <div class="col-md-3">
                   <select class="form-select" formControlName="type"
                   [ngClass]="cssValidator(phones.get(i+'.type'))"
                   >
@@ -105,15 +107,12 @@
                   <div class="invalid-feedback" >O tipo de telefone é requerido.</div>
                 </div>
 
-                <div class="col-md-2 mb-3">
-                  <input type="text" class="form-control" formControlName="number" placeholder="(85) 9.9999-9999" maxlength="21"
+                <div class="col-md-3 mb-3">
+                  <input type="text" [textMask]="{mask: phoneMask}" class="form-control" formControlName="number" placeholder="(85) 9.9999-9999" maxlength="21"
                   [ngClass]="cssValidator(phones.get(i+'.number'))"
                 />
-                <div class="invalid-feedback" *ngIf="phones.get(i+'.number')?.errors?.required && (phones.get(i+'.number')?.dirty || phones.get(i+'.number')?.touched)">O número é requerido.</div>
-                <div class="invalid-feedback" *ngIf="phones.get(i+'.number')?.errors?.maxlength && (phones.get(i+'.number')?.dirty || phones.get(i+'.number')?.touched)">Máximo de 20 caracteres.</div>
+                  <div class="invalid-feedback" *ngIf="phones.get(i+'.number')">O número é requerido.</div>
                 </div>
-
-
 
                 <div class="col-md-1 ">
                   <button class="btn btn-danger btn-sm my-1 " tooltip="Deletar" (click)="RemovePhone(modalDelecao, i)">
@@ -123,11 +122,10 @@
 
               </div>
 
-
             </fieldset>
           </div>
         </div>
-        <button (click)="addPhone()" class="btn btn-outline-secondary border" [disabled]="!form.valid">
+        <button (click)="addPhone()" class="btn btn-success border" [disabled]="!form.valid" tooltip="Adiciona um ou mais números de telefones.">
           <i class="fa fa-plus-circle me-2"></i>Telefone
         </button>
       </div>

@@ -32,7 +32,7 @@
             <td>{{ person.firstName }}</td>
             <td>{{ person.lastName }}</td>
             <td>{{ person.phones[0]?.number }}</td>
-            <td class="d-none d-md-table-cell">{{ person.cpf }}</td>
+            <td class="d-none d-md-table-cell">{{ person.cpf | cpf }}</td>
             <td class="d-none d-md-table-cell">{{ person.birthDate }}</td>
             <td>
               <button class="btn btn-danger btn-sm" tooltip="Deletar" (click)="openModal($event, person, modalDelecao)">

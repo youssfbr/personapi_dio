@@ -32,6 +32,13 @@
             ],
             "scripts": [
               "src/assets/js/scripts.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "libphonenumber-js/es6/AsYouType.js",
+              "babel-runtime/helpers/createClass",
+              "babel-runtime/core-js/get-iterator",
+              "babel-runtime/helpers/extends",
+              "babel-runtime/helpers/slicedToArray"
             ]
           },
           "configurations": {
