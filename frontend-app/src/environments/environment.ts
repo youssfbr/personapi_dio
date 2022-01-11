@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  apiURLBase: 'http://localhost:8080'
+  apiURLBase: 'https://people-api-dio7.herokuapp.com'
 };
 
 /*
