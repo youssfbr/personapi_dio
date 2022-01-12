@@ -34,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     CorsConfigurationSource corsConfigurationSource() {
 
         CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
-        configuration.setAllowedOrigins(Arrays.asList("https://people-api-dio7.herokuapp.com/api/v1/peoples","http://localhost:4200"));
+        configuration.setAllowedOrigins(Arrays.asList("https://person-alisson-youssf.netlify.app","http://localhost:4200"));
         configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowCredentials(true);
 
